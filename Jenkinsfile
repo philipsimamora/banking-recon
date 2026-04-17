@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         SONAR_PROJECT_KEY = 'banking-recon'
-        APP_DIR = '/opt/banking-recon'
-        PYTHON = 'python3'
-        JAVA_HOME = '/usr/lib/jvm/temurin-21-jre-amd64'
+        APP_DIR           = '/opt/banking-recon'
+        PYTHON            = 'python3'
+        JAVA_HOME         = '/usr/lib/jvm/temurin-21-jre-amd64'
     }
 
     stages {
@@ -38,19 +38,19 @@ pipeline {
                            -v --tb=short || true
                 '''
             }
-            post {
-                always {
-                    junit allowEmptyResults: true, testResults: '**/test-results/*.xml'
-                }
-            }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 echo '=== Running SonarQube Scan ==='
-                withSonarQubeEnv('SonarQube-Local') {
+                withSonarQubeEnv('SonarQube_Scanner') {
                     script {
-                        def scannerHome = tool name: 'SonarQube_Scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                        // Nama 'SonarQube_Scanner' harus sama persis
+                        // dengan yang ada di Manage Jenkins → Tools → SonarQube Scanner
+                        def scannerHome = tool(
+                            name: 'SonarQube_Scanner',
+                            type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                        )
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
@@ -68,26 +68,19 @@ pipeline {
 
         stage('Deploy to VPS') {
             when {
-                branch 'main'
+                branch 'master'  // ← fix: repo kamu pakai branch 'master' bukan 'main'
             }
             steps {
                 echo '=== Deploying Microservices ==='
                 sh '''
-                    # Buat direktori jika belum ada
                     mkdir -p ${APP_DIR}
-
-                    # Copy project files
                     rsync -av --exclude='venv' --exclude='__pycache__' \
                           --exclude='*.pyc' --exclude='.git' \
                           . ${APP_DIR}/
-
-                    # Setup venv di app directory
                     cd ${APP_DIR}
                     ${PYTHON} -m venv venv
                     . venv/bin/activate
                     pip install -r requirements.txt --quiet
-
-                    # Restart services via supervisor
                     sudo supervisorctl restart banking-transaction || true
                     sudo supervisorctl restart banking-statement || true
                     sudo supervisorctl restart banking-reconciliation || true
@@ -97,14 +90,8 @@ pipeline {
     }
 
     post {
-        success {
-            echo '✅ Pipeline SUCCESS'
-        }
-        failure {
-            echo '❌ Pipeline FAILED'
-        }
-        always {
-            cleanWs()
-        }
+        success { echo '✅ Pipeline SUCCESS' }
+        failure { echo '❌ Pipeline FAILED' }
+        always  { cleanWs() }
     }
 }
