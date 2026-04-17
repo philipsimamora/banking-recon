@@ -48,13 +48,16 @@ pipeline {
             steps {
                 echo '=== Running SonarQube Scan ==='
                 withSonarQubeEnv('SonarQube-Local') {
-                    sh '''
-                        ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                            -Dsonar.sources=. \
-                            -Dsonar.exclusions=**/venv/**,**/__pycache__/**,**/*.pyc \
-                            -Dsonar.python.version=3
-                    '''
+                    script {
+                        def scannerHome = tool 'SonarQube Scanner' // ← nama harus sama dengan di Tools config
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                                -Dsonar.sources=. \
+                                -Dsonar.exclusions=**/venv/**,**/__pycache__/**,**/*.pyc \
+                                -Dsonar.python.version=3
+                        """
+                    }
                 }
             }
         }
