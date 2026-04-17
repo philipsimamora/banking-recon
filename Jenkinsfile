@@ -5,6 +5,7 @@ pipeline {
         SONAR_PROJECT_KEY = 'banking-recon'
         APP_DIR = '/opt/banking-recon'
         PYTHON = 'python3'
+        JAVA_HOME = '/usr/lib/jvm/temurin-21-jre-amd64'
     }
 
     stages {
