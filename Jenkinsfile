@@ -49,16 +49,9 @@ pipeline {
             steps {
                 echo '=== Running SonarQube Scan ==='
                 withSonarQubeEnv('SonarQube Scanner') {
-                    script {
-                        def scannerHome = tool 'SonarQube Scanner'
-                        sh """
-                            ${scannerHome}/bin/sonar-scanner \
-                                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                                -Dsonar.sources=. \
-                                -Dsonar.exclusions=**/venv/**,**/__pycache__/**,**/*.pyc \
-                                -Dsonar.python.version=3
-                        """
-                    }
+                    sh '''
+                        ${SONAR_SCANNER_HOME}/bin/sonar-scanner
+                    '''
                 }
             }
         }
