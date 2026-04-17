@@ -1,0 +1,87 @@
+# ===========================
+# Python
+# ===========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# ===========================
+# Virtual Environment
+# ===========================
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# ===========================
+# Environment Variables
+# ===========================
+.env
+.env.local
+.env.production
+.env.*.local
+
+# ===========================
+# Database (SQLite lokal)
+# ===========================
+*.db
+*.sqlite
+*.sqlite3
+
+# ===========================
+# Testing & Coverage
+# ===========================
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+test-results/
+*.xml
+
+# ===========================
+# IDE & Editor
+# ===========================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+
+# ===========================
+# OS Generated
+# ===========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===========================
+# Logs
+# ===========================
+*.log
+logs/
+
+# ===========================
+# Build & Distribution
+# ===========================
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# ===========================
+# Alembic (jangan ignore versions)
+# ===========================
+alembic/versions/*.pyc
+
+# ===========================
+# Uvicorn / Gunicorn
+# ===========================
+*.pid
