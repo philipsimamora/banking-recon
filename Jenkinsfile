@@ -48,10 +48,8 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo '=== Running SonarQube Scan ==='
-                withSonarQubeEnv('SonarQube Scanner') {
-                    sh '''
-                        ${SONAR_SCANNER_HOME}/bin/sonar-scanner
-                    '''
+                withSonarQubeEnv('SonarQube-Local') {
+                    sh "${tool('SonarQube_Scanner')}/bin/sonar-scanner"
                 }
             }
         }
