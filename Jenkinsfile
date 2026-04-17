@@ -49,7 +49,10 @@ pipeline {
             steps {
                 echo '=== Running SonarQube Scan ==='
                 withSonarQubeEnv('SonarQube-Local') {
-                    sh "${tool('SonarQube_Scanner')}/bin/sonar-scanner"
+                    script {
+                        def scannerHome = tool name: 'SonarQube_Scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
                 }
             }
         }
